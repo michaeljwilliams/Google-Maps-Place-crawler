@@ -1,0 +1,25 @@
+{
+  "name": "google-maps-place-crawler",
+  "version": "0.0.1",
+  "description": "Google Maps Place crawler",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michaeljwilliams/GoogleMapsPlaceCrawler.git"
+  },
+  "keywords": [
+    "google",
+    "maps",
+    "place",
+    "crawler"
+  ],
+  "author": "Michael Williams",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/michaeljwilliams/GoogleMapsPlaceCrawler/issues"
+  },
+  "homepage": "https://github.com/michaeljwilliams/GoogleMapsPlaceCrawler#readme"
+}
