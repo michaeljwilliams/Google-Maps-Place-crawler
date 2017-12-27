@@ -1,2 +1,1 @@
-# GoogleMapsPlaceCrawler
-Google Maps Place crawler
+# Google Maps Place search
