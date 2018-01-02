@@ -1,58 +1,50 @@
-var https = require('https')
+const https = require('https')
 const util = require('util') // For inspecting objects
 
 // Add your Google Maps API Key to this file
-const apikey = require('./google_maps_api_key.json')
+const apikey = (require('./google_maps_api_key.json')).key
 
-var DATA = {}
+
 
 // Search for Places in a specified radius from the given location.
 // searchRadius is in meters. There are about 1600 meters in a mile
 async function placeNearbySearch(lat, long, searchRadius) {
-    let placeNumber = 1
+    let DATA = {}
 
-    await httpsGetJson(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${long}&radius=${searchRadius}&key=${apikey.key}`,
-        (dataChunk) => {
-            collectData(dataChunk)
-        })
+    let dataChunk = await httpsGetJson(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${long}&radius=${searchRadius}&key=${apikey}`)
+    await collectData(dataChunk)
 
     // Collects data and adds to DATA
     async function collectData(dataChunk) {
         for(let eachPlace of dataChunk.results) {
             let placeID = eachPlace.place_id
-            console.log(`${placeNumber}. ${placeID}`)
-            placeNumber++
+
 
             // If this place doesn't already exist in DATA
-            if(!DATA.placeID) {
-                // Gets place details, given a Place ID, and adds to DATA
-
-                await httpsGetJson(`https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeID}&key=${apikey.key}`,
-                    (place) => {
-                        // Don't collect data if place no longer exists
-                        if(!place.permanently_closed) {
-                            let p = place.result
-                            DATA.placeID = {
-                                "placeID": placeID,
-                                "name": p.name,
-                                "address": p.formatted_address,
-                                "phone": p.formatted_phone_number,
-                                "website": p.website,
-                                "internationalPhone": p.international_phone_number,
-                                "latitude": p.geometry.location.lat,
-                                "longitude": p.geometry.location.lng,
-                                "googlePage": p.url,
-                                "hours": p.opening_hours,
-                                "priceLevel": p.price_level,
-                                "rating": p.rating,
-                                "types": p.types,
-                                "utcOffset": p.utc_offset,
-                                "vicinity": p.vicinity
-                            }
-                        }
-                        console.log(`${placeNumber}. ${DATA.name}`)
+            // Gets place details, given a Place ID, and adds to DATA
+            if(!DATA[placeID]) {
+                let place = await httpsGetJson(`https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeID}&key=${apikey}`)
+                // Don't collect data if place no longer exists
+                if(!place.permanently_closed) {
+                    let p = place.result
+                    DATA[placeID] = {
+                        "placeID": placeID,
+                        "name": p.name,
+                        "address": p.formatted_address,
+                        "phone": p.formatted_phone_number,
+                        "website": p.website,
+                        "internationalPhone": p.international_phone_number,
+                        "latitude": p.geometry.location.lat,
+                        "longitude": p.geometry.location.lng,
+                        "googlePage": p.url,
+                        "hours": p.opening_hours,
+                        "priceLevel": p.price_level,
+                        "rating": p.rating,
+                        "types": p.types,
+                        "utcOffset": p.utc_offset,
+                        "vicinity": p.vicinity
                     }
-                )
+                }
             }
         }
         if(dataChunk.next_page_token) return continueSearch(dataChunk.next_page_token)
@@ -60,49 +52,45 @@ async function placeNearbySearch(lat, long, searchRadius) {
 
     // Continues search if more than 20 results
     async function continueSearch(pagetoken) {
+        console.log("Found more than 20 places. Continuing search...")
         wait(1500)
-        await httpsGetJson(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=${apikey.key}&pagetoken=${pagetoken}`,
-            (dataChunk) => {
-                collectData(dataChunk)
-            })
+        let dataChunk = await httpsGetJson(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=${apikey}&pagetoken=${pagetoken}`)
+        await collectData(dataChunk)
     }
     return DATA
 }
 
 // Get request with given URL. Should return JSON, which is parsed and passed to the callback.
-async function httpsGetJson(url, cb) {
-    await https.get(url, (response) => {
-        const { statusCode } = response
-        const contentType = response.headers['content-type']
-
-        let error
-        if (statusCode !== 200) {
-            error = new Error(`Request Failed. Status Code: ${statusCode}`)
-        } else if (!/^application\/json/.test(contentType)) {
-            error = new Error(`Invalid content-type. Expected application/json but received ${contentType}`)
-        }
-        if (error) {
-            console.error(error.message)
-            // consume response data to free up memory
-            response.responseume()
-            return
-        }
-
-        response.setEncoding('utf8')
-        let rawData = ''
-        response.on('data', (chunk) => { rawData += chunk; });
-        response.on('end', () => {
-            try {
-                const parsedData = JSON.parse(rawData)
-                cb(parsedData)
-            } catch (e) {
-                console.error(e.message)
-            }
+function httpsGetJson(url) {
+    return new Promise(function(resolve, reject) {
+        https.get(url, (response) => {
+            response.setEncoding('utf8')
+            let rawData = ''
+            let parsedData
+            response.on('data', (chunk) => { rawData += chunk; });
+            response.on('end', () => {
+                try {
+                    parsedData = JSON.parse(rawData)
+                } catch (e) {
+                    console.error(e.message)
+                }
+                resolve(parsedData)
+            })
+        }).on('error', (error) => {
+            reject(error)
         })
-    }).on('error', (e) => {
-        console.error(`Error: ${e.message}`)
     })
 }
+ 
+async function main() {
+    try {
+        var quote = await getQuote();
+        console.log(quote);
+    } catch(error) {
+        console.error(error);
+    }
+}
+
 
 // Wait for x ms. Use with await in async funcs
 function wait(ms){
@@ -118,15 +106,21 @@ console.log(`
 | Welcome to Google Maps Place crawler |
 |          by Michael Williams         |
 +--------------------------------------+
+
+Using Google Maps API key: ${apikey}
 `)
 
-placeNearbySearch(33.647862, -117.715524, 20)
-// console.log(`\n\n\nDATA: \n\n${util.inspect(DATA, false, null)}`)
+placeNearbySearch(33.647862, -117.715524, 20).then( (DATA) => {
+    /* List the names of all the places. Doesn't work for some reason (ReferenceError: name is not defined)
+    for(let eachPlace in DATA) {
+        console.log(util.inspect(DATA[eachPlace][name], false, null))
+    }
+    */
+    console.log(`\n${util.inspect(DATA, false, null)}`)
 
-wait(5000).then( () => {
-    console.log(`\n\n\nDATA: \n\n${util.inspect(DATA, false, null)}`)
+    let numPlaces = Object.keys(DATA).length
+    console.log(`\nFound ${numPlaces} places\n`)
+    if(numPlaces === 60) console.log("Google only provides up to 60 results for each specific search. Change lat/lng to obtain more results.\n")
 })
 
-module.exports = {
-
-}
+module.exports.placeNearbySearch = exports.placeNearbySearch = placeNearbySearch
