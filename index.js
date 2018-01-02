@@ -120,7 +120,7 @@ placeNearbySearch(33.647862, -117.715524, 20).then( (DATA) => {
 
     let numPlaces = Object.keys(DATA).length
     console.log(`\nFound ${numPlaces} places\n`)
-    if(numPlaces === 60) console.log("Google only provides up to 60 results for each specific search. Change lat/lng to obtain more results.\n")
+    if(numPlaces === 60) console.log("Google has a limit of 60 results for each specific search. Change lat/lng to obtain more results.\n")
 })
 
 module.exports.placeNearbySearch = exports.placeNearbySearch = placeNearbySearch
