@@ -1,13 +1,12 @@
 const https = require('https')
 
-// Add your Google Maps API Key to this file
-const apikey = (require('./google_maps_api_key.json')).key 
 
-// Search for Places in a specified radius from the given location. Returns a promise with an object of Places
+
+// Search for Places in a specified radius from the given location.
 // searchRadius is in meters. There are about 1600 meters in a mile
 async function placeNearbySearch(lat, long, searchRadius) {
 
-    let dataChunk = await httpsGetJson(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${long}&radius=${searchRadius}&key=${apikey}`)
+    let dataChunk = await httpsGetJson(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${long}&radius=${searchRadius}&key=${GoogleMapsPlaceCrawler.apikey}`)
     await collectData(dataChunk)
 
     // Collects data and adds to DATA
@@ -19,7 +18,7 @@ async function placeNearbySearch(lat, long, searchRadius) {
             // If this place doesn't already exist in DATA
             // Gets place details, given a Place ID, and adds to DATA
             if(!GoogleMapsPlaceCrawler.data[placeID]) {
-                let place = await httpsGetJson(`https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeID}&key=${apikey}`)
+                let place = await httpsGetJson(`https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeID}&key=${GoogleMapsPlaceCrawler.apikey}`)
                 // Don't collect data if place no longer exists
                 if(!place.permanently_closed) {
                     let p = place.result
@@ -50,7 +49,7 @@ async function placeNearbySearch(lat, long, searchRadius) {
     async function continueSearch(pagetoken) {
         console.log("Found more than 20 places. Continuing search...")
         wait(1500)
-        let dataChunk = await httpsGetJson(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=${apikey}&pagetoken=${pagetoken}`)
+        let dataChunk = await httpsGetJson(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=${GoogleMapsPlaceCrawler.apikey}&pagetoken=${pagetoken}`)
         await collectData(dataChunk)
     }
 }
@@ -110,7 +109,8 @@ function wait(ms){
 
 
 let GoogleMapsPlaceCrawler = {
-    "data": {}, // Holds all the data
+    "apikey": "",
+    "data": {}, // Stores all the data
     "placeNearbySearch": placeNearbySearch,
     "searchArea": searchArea
 }
