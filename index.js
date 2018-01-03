@@ -1,12 +1,11 @@
 const https = require('https')
 
 // Add your Google Maps API Key to this file
-const apikey = (require('./google_maps_api_key.json')).key
+const apikey = (require('./google_maps_api_key.json')).key 
 
-// Search for Places in a specified radius from the given location.
+// Search for Places in a specified radius from the given location. Returns a promise with an object of Places
 // searchRadius is in meters. There are about 1600 meters in a mile
 async function placeNearbySearch(lat, long, searchRadius) {
-    let DATA = {}
 
     let dataChunk = await httpsGetJson(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${long}&radius=${searchRadius}&key=${apikey}`)
     await collectData(dataChunk)
@@ -19,12 +18,12 @@ async function placeNearbySearch(lat, long, searchRadius) {
 
             // If this place doesn't already exist in DATA
             // Gets place details, given a Place ID, and adds to DATA
-            if(!DATA[placeID]) {
+            if(!GoogleMapsPlaceCrawler.data[placeID]) {
                 let place = await httpsGetJson(`https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeID}&key=${apikey}`)
                 // Don't collect data if place no longer exists
                 if(!place.permanently_closed) {
                     let p = place.result
-                    DATA[placeID] = {
+                    GoogleMapsPlaceCrawler.data[placeID] = {
                         "placeID": placeID,
                         "name": p.name,
                         "address": p.formatted_address,
@@ -54,8 +53,30 @@ async function placeNearbySearch(lat, long, searchRadius) {
         let dataChunk = await httpsGetJson(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=${apikey}&pagetoken=${pagetoken}`)
         await collectData(dataChunk)
     }
-    return DATA
 }
+
+
+// This function will repeatedly run placeNearbySearch, which will search for places in a radius of searchRadius, 
+// beginning with the start set of coordinates. The search will be repeated until the search area is covered, in 
+// increments of (approximately) searchRadius (so that nothing is missed). The search area is a rectangle defined by the 
+// start coordinates and the end coordinates, which are opposite vertices on the diagonal of the rectangle. The start 
+// coordinates are the lower left vertex, and the end coordinates are the upper right vertex.
+//
+// In order to collect all the data, there should be less than 60 places within each circle defined by searchRadius and
+// any set of coordinates within the search area.
+
+// Start latitude, start longitude, end latitude, end longitude, search radius in meters
+async function searchArea(startLat, startLong, endLat, endLong, searchRadius) {
+    let latIncrement = searchRadius * 0.00000904371733
+    let longIncrement = searchRadius * 0.00000898311175 / Math.cos(startLat * Math.PI / 180)
+
+    for(let long = startLong; long <= endLong; long += longIncrement) {
+        for(let lat = startLat; lat <= endLat; lat += latIncrement) {
+            await placeNearbySearch(lat, long, searchRadius)
+        }
+    }
+}
+
 
 // Get request with given URL. Should return JSON, which is parsed and passed to the callback.
 function httpsGetJson(url) {
@@ -78,15 +99,6 @@ function httpsGetJson(url) {
         })
     })
 }
- 
-async function main() {
-    try {
-        var quote = await getQuote();
-        console.log(quote);
-    } catch(error) {
-        console.error(error);
-    }
-}
 
 // Wait for x ms. Use with await in async funcs
 function wait(ms){
@@ -97,4 +109,12 @@ function wait(ms){
 
 
 
-module.exports.placeNearbySearch = exports.placeNearbySearch = placeNearbySearch
+let GoogleMapsPlaceCrawler = {
+    "data": {}, // Holds all the data
+    "placeNearbySearch": placeNearbySearch,
+    "searchArea": searchArea
+}
+
+module.exports = exports = {
+    "GoogleMapsPlaceCrawler": GoogleMapsPlaceCrawler
+}
