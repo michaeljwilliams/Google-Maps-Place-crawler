@@ -58,10 +58,10 @@ console.log(`Using Google Maps API key: ${GoogleMapsPlaceCrawler.apikey}`)
  * This async function searches for Places in a specified radius from the given coordinates.
  * args: latitude, longitude, search radius (in meters; 1 mile ~ 1600 m)
  */
-// GoogleMapsPlaceCrawler.placeNearbySearch(33.647862, -117.715524, 20).then(/* do something */ tester())
+// GoogleMapsPlaceCrawler.placeNearbySearch(33.647862, -117.715524, 20).then(/* do something */ tester)
 
 /* searchArea example
  * This async function runs placeNearbySearch many times in order to cover a large rectangular area.
  * args: start latitude, start longitude, end latitude, end longitude, search radius (meters)
  */
-GoogleMapsPlaceCrawler.searchArea(33.638787, -117.724922, 33.641797, -117.721081, 100).then(tester())
+GoogleMapsPlaceCrawler.searchArea(33.638787, -117.724922, 33.640975, -117.722368, 100).then(tester)
