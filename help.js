@@ -6,7 +6,7 @@ console.log(`
 `)
 /* DIRECTIONS
  * This is the object exported by index.js. Here we will store it in the variable GoogleMapsPlaceCrawler
- * Not const because it posesses the data container, which is manipulated
+ * Cannot be const because it posesses the data container, which is manipulated
  */
 let GoogleMapsPlaceCrawler = (require('./index')).GoogleMapsPlaceCrawler
 
