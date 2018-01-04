@@ -5,6 +5,7 @@ const https = require('https')
 // Search for Places in a specified radius from the given location.
 // searchRadius is in meters. There are about 1600 meters in a mile
 async function placeNearbySearch(lat, long, searchRadius) {
+    console.log("Searching new area...")
 
     let dataChunk = await httpsGetJson(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${long}&radius=${searchRadius}&key=${GoogleMapsPlaceCrawler.apikey}`)
     await collectData(dataChunk)
