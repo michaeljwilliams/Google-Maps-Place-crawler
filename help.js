@@ -48,6 +48,9 @@ console.log(`Using Google Maps API key: ${GoogleMapsPlaceCrawler.apikey}`)
  *          This is limited to 60 results (because of how the API works).
  * 2. GoogleMapsPlaceCrawler.searchArea
  *          This async function runs placeNearbySearch many times in order to cover a large rectangular area.
+ *          The search area is a rectangle defined by the start coordinates and the end coordinates, which are opposite 
+ *          vertices on the diagonal of the rectangle. The start coordinates are the lower left vertex, and the end 
+ *          coordinates are the upper right vertex.
  *          Remember to stay within your Google Maps API usage limits (if you get an error you might've exceeded the limit).
  *
  * All the data collected by both functions is stored in the GoogleMapsPlaceCrawler.data object
