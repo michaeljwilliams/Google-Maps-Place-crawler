@@ -26,9 +26,12 @@ async function placeNearbySearch(lat, long, searchRadius) {
                     GoogleMapsPlaceCrawler.data[placeID] = {
                         "placeID": placeID,
                         "name": p.name,
-                        "address": p.formatted_address,
-                        "phone": p.formatted_phone_number,
+                        "address": {
+                            "full": p.formatted_address,
+                            "components": p.address_components
+                        },
                         "website": p.website,
+                        "phone": p.formatted_phone_number,
                         "internationalPhone": p.international_phone_number,
                         "latitude": p.geometry.location.lat,
                         "longitude": p.geometry.location.lng,
