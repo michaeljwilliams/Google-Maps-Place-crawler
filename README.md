@@ -5,7 +5,7 @@ Node.js script that uses the Google Places API to programmatically retrieve and 
 ## Usage
 Get the GoogleMapsPlaceCrawler object exported by the package. Here we will store it in the variable GoogleMapsPlaceCrawler. Do not use const because the object is manipulated by the script.
 
-     let GoogleMapsPlaceCrawler = require('Google-Maps-Place-crawler')
+    let GoogleMapsPlaceCrawler = require('Google-Maps-Place-crawler')
 
 Set your Google Maps API key in the same object:
 
