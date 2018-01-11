@@ -11,13 +11,12 @@
     "url": "git+https://github.com/michaeljwilliams/GoogleMapsPlaceCrawler.git"
   },
   "keywords": [
-    "google",
-    "maps",
+    "google maps",
     "place",
     "crawler"
   ],
   "author": "Michael Williams",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/michaeljwilliams/GoogleMapsPlaceCrawler/issues"
   },
