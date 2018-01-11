@@ -119,6 +119,4 @@ let GoogleMapsPlaceCrawler = {
     "searchArea": searchArea
 }
 
-module.exports = exports = {
-    "GoogleMapsPlaceCrawler": GoogleMapsPlaceCrawler
-}
+module.exports = exports = GoogleMapsPlaceCrawler

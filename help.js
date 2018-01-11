@@ -8,7 +8,7 @@ console.log(`
  * This is the object exported by index.js. Here we will store it in the variable GoogleMapsPlaceCrawler
  * Cannot be const because it posesses the data container, which is manipulated
  */
-let GoogleMapsPlaceCrawler = (require('./index')).GoogleMapsPlaceCrawler
+let GoogleMapsPlaceCrawler = require('./index')
 
 // Set your Google Maps API key. You can do so with a JSON file, like this
 GoogleMapsPlaceCrawler.apikey = (require('./google_maps_api_key.json')).key
