@@ -3,7 +3,7 @@
 Node.js script that uses the Google Places API to programmatically retrieve and compile a list of Places (e.g. businesses) in a given area. Data can include place/business name, address, website, phone number, latitude/longitude, and more. With this script you can retrieve data on **any number** of places, up to the limit of your Google Maps API key.
 
 ## Usage
-Get the GoogleMapsPlaceCrawler object exported by the package. Here we will store it in the variable GoogleMapsPlaceCrawler. Do not use const because the object is manipulated by the script.
+Require the package. Here we will store it in the variable GoogleMapsPlaceCrawler. Do not use const because the object is manipulated by the script.
 
     let GoogleMapsPlaceCrawler = require('Google-Maps-Place-crawler')
 
