@@ -1,6 +1,6 @@
 {
   "name": "google-maps-place-crawler",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Google Maps Place crawler",
   "main": "index.js",
   "scripts": {
