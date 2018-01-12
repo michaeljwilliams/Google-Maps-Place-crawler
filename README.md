@@ -40,7 +40,7 @@ Example:
 
     searchArea(start latitude, start longitude, end latitude, end longitude, search radius)
 
-This async function runs placeNearbySearch many times in order to cover a large rectangular area. Search radius should be in meters.
+This async function runs placeNearbySearch many times in order to cover a large rectangular area. Search radius should be in meters. In this function the search radius should reflect the expected density of Places in the area. If there are more than 60 Places within one of the searches done by placeNearbySearch (i.e. search radius is too large), the rest of the Places will not be captured in that search. You would also not want to set this value too low, because that will make the script take longer and use more requests of the Google API. I think 100 meters is a good, safe value for an area that might be dense with Places.
 
 Example:
 
