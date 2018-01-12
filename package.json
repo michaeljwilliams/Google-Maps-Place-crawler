@@ -16,7 +16,7 @@
     "crawler"
   ],
   "author": "Michael Williams",
-  "license": "MIT",
+  "license": "ISC",
   "bugs": {
     "url": "https://github.com/michaeljwilliams/GoogleMapsPlaceCrawler/issues"
   },
