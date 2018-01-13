@@ -40,11 +40,14 @@ Example:
 
     searchArea(start latitude, start longitude, end latitude, end longitude, search radius)
 
-This async function runs placeNearbySearch many times in order to cover a large rectangular area. Search radius should be in meters. In this function the search radius should reflect the expected density of Places in the area. If there are more than 60 Places within one of the searches done by placeNearbySearch (i.e. search radius is too large), the rest of the Places will not be captured in that search. You would also not want to set this value too low, because that will make the script take longer and use more requests of the Google API. I think 100 meters is a good, safe value for an area that might be dense with Places.
+This async function runs placeNearbySearch many times in order to cover a large rectangular area. Search radius should be in meters.
 
 Example:
 
     GoogleMapsPlaceCrawler.searchArea(33.638787, -117.724922, 33.640975, -117.722368, 100).then(/* do something */)
 
 The search area is a rectangle defined by the start coordinates and the end coordinates, which are opposite vertices on the diagonal of the rectangle. The start coordinates are the lower left vertex, and the end coordinates are the upper right vertex.
+
+In this function the search radius should reflect the expected density of Places in the area. If there are more than 60 Places within one of the searches done by placeNearbySearch (i.e. search radius is too large), the rest of the Places will not be captured in that search. You would also not want to set this value too low, because that will make the script take longer and use more requests of the Google API. I think 100 meters is a good, safe value for an area that might be dense with Places.
+
 ### Instructions and example usage are also given in help.js
