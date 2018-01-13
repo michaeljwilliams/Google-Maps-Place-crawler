@@ -1,28 +1,28 @@
-const https = require('https')
+const https = require('https');
 
 
 
 // Search for Places in a specified radius from the given location.
 // searchRadius is in meters. There are about 1600 meters in a mile
 async function placeNearbySearch(lat, long, searchRadius) {
-    console.log("Searching new area...")
+    console.log("Searching new area...");
 
-    let dataChunk = await httpsGetJson(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${long}&radius=${searchRadius}&key=${GoogleMapsPlaceCrawler.apikey}`)
-    await collectData(dataChunk)
+    let dataChunk = await httpsGetJson(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${long}&radius=${searchRadius}&key=${GoogleMapsPlaceCrawler.apikey}`);
+    await collectData(dataChunk);
 
     // Collects data and adds to DATA
     async function collectData(dataChunk) {
         for(let eachPlace of dataChunk.results) {
-            let placeID = eachPlace.place_id
+            let placeID = eachPlace.place_id;
 
 
             // If this place doesn't already exist in DATA
             // Gets place details, given a Place ID, and adds to DATA
             if(!GoogleMapsPlaceCrawler.data[placeID]) {
-                let place = await httpsGetJson(`https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeID}&key=${GoogleMapsPlaceCrawler.apikey}`)
+                let place = await httpsGetJson(`https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeID}&key=${GoogleMapsPlaceCrawler.apikey}`);
                 // Don't collect data if place no longer exists
                 if(!place.permanently_closed) {
-                    let p = place.result
+                    let p = place.result;
                     GoogleMapsPlaceCrawler.data[placeID] = {
                         "placeID": placeID,
                         "name": p.name,
@@ -42,19 +42,19 @@ async function placeNearbySearch(lat, long, searchRadius) {
                         "types": p.types,
                         "utcOffset": p.utc_offset,
                         "vicinity": p.vicinity
-                    }
+                    };
                 }
             }
         }
-        if(dataChunk.next_page_token) return continueSearch(dataChunk.next_page_token)
+        if(dataChunk.next_page_token) return continueSearch(dataChunk.next_page_token);
     }
 
     // Continues search if more than 20 results
     async function continueSearch(pagetoken) {
-        console.log("Found more than 20 places. Continuing search...")
-        wait(1500)
-        let dataChunk = await httpsGetJson(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=${GoogleMapsPlaceCrawler.apikey}&pagetoken=${pagetoken}`)
-        await collectData(dataChunk)
+        console.log("Found more than 20 places. Continuing search...");
+        wait(1500);
+        let dataChunk = await httpsGetJson(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=${GoogleMapsPlaceCrawler.apikey}&pagetoken=${pagetoken}`);
+        await collectData(dataChunk);
     }
 }
 
@@ -70,12 +70,12 @@ async function placeNearbySearch(lat, long, searchRadius) {
 
 // Start latitude, start longitude, end latitude, end longitude, search radius in meters
 async function searchArea(startLat, startLong, endLat, endLong, searchRadius) {
-    let latIncrement = searchRadius * 0.00000904371733
-    let longIncrement = searchRadius * 0.00000898311175 / Math.cos(startLat * Math.PI / 180)
+    let latIncrement = searchRadius * 0.00000904371733;
+    let longIncrement = searchRadius * 0.00000898311175 / Math.cos(startLat * Math.PI / 180);
 
     for(let long = startLong; long <= endLong; long += longIncrement) {
         for(let lat = startLat; lat <= endLat; lat += latIncrement) {
-            await placeNearbySearch(lat, long, searchRadius)
+            await placeNearbySearch(lat, long, searchRadius);
         }
     }
 }
@@ -85,20 +85,20 @@ async function searchArea(startLat, startLong, endLat, endLong, searchRadius) {
 function httpsGetJson(url) {
     return new Promise(function(resolve, reject) {
         https.get(url, (response) => {
-            response.setEncoding('utf8')
-            let rawData = ''
-            let parsedData
+            response.setEncoding('utf8');
+            let rawData = '';
+            let parsedData;
             response.on('data', (chunk) => { rawData += chunk; });
             response.on('end', () => {
                 try {
-                    parsedData = JSON.parse(rawData)
+                    parsedData = JSON.parse(rawData);
                 } catch (e) {
-                    console.error(e.message)
+                    console.error(e.message);
                 }
-                resolve(parsedData)
-            })
+                resolve(parsedData);
+            });
         }).on('error', (error) => {
-            reject(error)
+            reject(error);
         })
     })
 }
@@ -106,7 +106,7 @@ function httpsGetJson(url) {
 // Wait for x ms. Use with await in async funcs
 function wait(ms){
     return new Promise(resolve=>{
-        setTimeout(resolve,ms)
+        setTimeout(resolve,ms);
     })
 }
 
@@ -117,6 +117,6 @@ let GoogleMapsPlaceCrawler = {
     "data": {}, // Stores all the data
     "placeNearbySearch": placeNearbySearch,
     "searchArea": searchArea
-}
+};
 
-module.exports = exports = GoogleMapsPlaceCrawler
+module.exports = exports = GoogleMapsPlaceCrawler;

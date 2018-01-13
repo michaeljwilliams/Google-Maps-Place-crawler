@@ -3,39 +3,39 @@ console.log(`
 | Welcome to Google Maps Place crawler |
 |          by Michael Williams         |
 +--------------------------------------+
-`)
+`);
 /* DIRECTIONS
  * This is the object exported by index.js. Here we will store it in the variable GoogleMapsPlaceCrawler
  * Cannot be const because it posesses the data container, which is manipulated
  */
-let GoogleMapsPlaceCrawler = require('./index')
+let GoogleMapsPlaceCrawler = require('./index');
 
 // Set your Google Maps API key. You can do so with a JSON file, like this
-GoogleMapsPlaceCrawler.apikey = (require('./google_maps_api_key.json')).key
+GoogleMapsPlaceCrawler.apikey = (require('./google_maps_api_key.json')).key;
 
 // Further directions for usage are at the bottom
 
 
 
-const util = require('util') // For inspecting objects
+const util = require('util'); // For inspecting objects
 
 // Test function that does something with the data (displays Place names)
 function tester() {
     // List the names of all the places
-    console.log(`\nFound these places:\n`)
+    console.log(`\nFound these places:\n`);
     for(let eachPlace in GoogleMapsPlaceCrawler.data) {
-        console.log(util.inspect(GoogleMapsPlaceCrawler.data[eachPlace].name, false, null))
+        console.log(util.inspect(GoogleMapsPlaceCrawler.data[eachPlace].name, false, null));
     }
 
-    // console.log(`\n${util.inspect(GoogleMapsPlaceCrawler.data, false, null)}`) // Inspect the data object if you want.
+    // console.log(`\n${util.inspect(GoogleMapsPlaceCrawler.data, false, null)}`); // Inspect the data object if you want.
 
-    let numPlaces = Object.keys(GoogleMapsPlaceCrawler.data).length
-    console.log(`\nFound ${numPlaces} places\n`)
+    let numPlaces = Object.keys(GoogleMapsPlaceCrawler.data).length;
+    console.log(`\nFound ${numPlaces} places\n`);
 
-    return GoogleMapsPlaceCrawler.data
+    return GoogleMapsPlaceCrawler.data;
 }
 
-console.log(`Using Google Maps API key: ${GoogleMapsPlaceCrawler.apikey}`)
+console.log(`Using Google Maps API key: ${GoogleMapsPlaceCrawler.apikey}`);
 
 
 
@@ -61,10 +61,10 @@ console.log(`Using Google Maps API key: ${GoogleMapsPlaceCrawler.apikey}`)
  * This async function searches for Places in a specified radius from the given coordinates.
  * args: latitude, longitude, search radius (in meters; 1 mile ~ 1600 m)
  */
-// GoogleMapsPlaceCrawler.placeNearbySearch(33.647862, -117.715524, 20).then(/* do something */ tester)
+// GoogleMapsPlaceCrawler.placeNearbySearch(33.647862, -117.715524, 20).then(/* do something */ tester);
 
 /* searchArea example
  * This async function runs placeNearbySearch many times in order to cover a large rectangular area.
  * args: start latitude, start longitude, end latitude, end longitude, search radius (meters)
  */
-GoogleMapsPlaceCrawler.searchArea(33.638787, -117.724922, 33.640975, -117.722368, 100).then(tester)
+GoogleMapsPlaceCrawler.searchArea(33.638787, -117.724922, 33.640975, -117.722368, 100).then(tester);
