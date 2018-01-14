@@ -23,25 +23,25 @@ async function placeNearbySearch(lat, long, searchRadius) {
                 // Don't collect data if place no longer exists
                 if(!place.permanently_closed) {
                     let p = place.result;
-                    GoogleMapsPlaceCrawler.data[placeID] = {
-                        "placeID": placeID,
-                        "name": p.name,
-                        "address": {
-                            "full": p.formatted_address,
-                            "components": p.address_components
-                        },
-                        "website": p.website,
-                        "phone": p.formatted_phone_number,
-                        "internationalPhone": p.international_phone_number,
-                        "latitude": p.geometry.location.lat,
-                        "longitude": p.geometry.location.lng,
-                        "googlePage": p.url,
-                        "hours": p.opening_hours,
-                        "priceLevel": p.price_level,
-                        "rating": p.rating,
-                        "types": p.types,
-                        "utcOffset": p.utc_offset,
-                        "vicinity": p.vicinity
+                    GoogleMapsPlaceCrawler.data[placeID] = 
+                    {   "placeID": placeID
+                    ,   "name": p.name
+                    ,   "address": 
+                        {   "full": p.formatted_address
+                        ,   "components": p.address_components
+                        }
+                    ,   "website": p.website
+                    ,   "phone": p.formatted_phone_number
+                    ,   "internationalPhone": p.international_phone_number
+                    ,   "latitude": p.geometry.location.lat
+                    ,   "longitude": p.geometry.location.lng
+                    ,   "googlePage": p.url
+                    ,   "hours": p.opening_hours
+                    ,   "priceLevel": p.price_level
+                    ,   "rating": p.rating
+                    ,   "types": p.types
+                    ,   "utcOffset": p.utc_offset
+                    ,   "vicinity": p.vicinity
                     };
                 }
             }
