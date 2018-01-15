@@ -32,7 +32,10 @@ This async function searches for Places in a specified radius from the given coo
 
 Example:
 
-    GoogleMapsPlaceCrawler.placeNearbySearch(33.647862, -117.715524, 20).then(/* do something */)
+    GoogleMapsPlaceCrawler.placeNearbySearch(33.640864, -117.720336, 50).then((data) => {
+        // do something with data
+        console.log(data);
+    });
        
 <br>
 
@@ -44,7 +47,10 @@ This async function runs placeNearbySearch many times in order to cover a large 
 
 Example:
 
-    GoogleMapsPlaceCrawler.searchArea(33.638787, -117.724922, 33.640975, -117.722368, 100).then(/* do something */)
+    GoogleMapsPlaceCrawler.searchArea(33.638684, -117.721065, 33.641078, -117.719273, 100).then((data) => {
+        // do something with data
+        console.log(data);
+    });
 
 The search area is a rectangle defined by the start coordinates and the end coordinates, which are opposite vertices on the diagonal of the rectangle. The start coordinates are the lower left vertex, and the end coordinates are the upper right vertex.
 
