@@ -1,2 +1,5 @@
+.DS_Store
+node_modules
 google_maps_api_key.json
 to-do.txt
+Place-data.json

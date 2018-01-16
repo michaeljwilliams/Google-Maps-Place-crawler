@@ -1,3 +1,5 @@
+const fs = require("fs");
+
 console.log(`
 +--------------------------------------+
 | Welcome to Google Maps Place crawler |
@@ -41,8 +43,10 @@ GoogleMapsPlaceCrawler.logging = true;
 GoogleMapsPlaceCrawler.placeNearbySearch(33.640864, -117.720336, 50).then((data) => {
     // do something with data
     console.log("\nRESULTS:\n");
-    console.log(data);
+    //console.log(data);
     console.log(`\nFound ${Object.keys(data).length} places\n`);
+    fs.writeFileSync("./Place-data.json", JSON.stringify(data, null, 4), "utf8");
+    console.log(`\nResult written to ${__dirname}/Place-data.json.`);
 });
 */
 
@@ -50,9 +54,13 @@ GoogleMapsPlaceCrawler.placeNearbySearch(33.640864, -117.720336, 50).then((data)
  * This async function runs placeNearbySearch many times in order to cover a large rectangular area.
  * args: start latitude, start longitude, end latitude, end longitude, search radius (meters)
  */ 
+
 GoogleMapsPlaceCrawler.searchArea(33.638684, -117.721065, 33.641078, -117.719273, 100).then((data) => {
     // do something with data
     console.log("\nRESULTS:\n");
     console.log(data);
     console.log(`\nFound ${Object.keys(data).length} places\n`);
+    fs.writeFileSync("./Place-data.json", JSON.stringify(data, null, 4), "utf8");
+    console.log(`\nResult written to ${__dirname}/Place-data.json.`);
 });
+
