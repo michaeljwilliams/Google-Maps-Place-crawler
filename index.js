@@ -8,9 +8,9 @@ module.exports = exports =
     // Search for Places in a specified radius (meters) from the given coordinates.
 ,   "nearby": async function(lat, long, searchRadius) {
         if(this.logging === true) console.log("Searching new area...");
-        let that = this;
+        let self = this;
 
-        let dataChunk = await httpsGetJson(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${long}&radius=${searchRadius}&key=${that.apikey}`);
+        let dataChunk = await httpsGetJson(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${long}&radius=${searchRadius}&key=${self.apikey}`);
         await collectData(dataChunk);
 
         // Collects data and adds to DATA
@@ -21,12 +21,12 @@ module.exports = exports =
 
                 // If this place doesn't already exist in DATA
                 // Gets place details, given a Place ID, and adds to DATA
-                if(!that.data[placeID]) {
-                    let place = await httpsGetJson(`https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeID}&key=${that.apikey}`);
+                if(!self.data[placeID]) {
+                    let place = await httpsGetJson(`https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeID}&key=${self.apikey}`);
                     // Don't collect data if place no longer exists
                     if(!place.permanently_closed) {
                         let p = place.result;
-                        that.data[placeID] = 
+                        self.data[placeID] = 
                         {   "placeID": placeID
                         ,   "name": p.name
                         ,   "address": 
@@ -54,9 +54,9 @@ module.exports = exports =
 
         // Continues search if more than 20 results
         async function continueSearch(pagetoken) {
-            if(that.logging === true) console.log("Found more than 20 places. Continuing search...");
+            if(self.logging === true) console.log("Found more than 20 places. Continuing search...");
             wait(1500);
-            let dataChunk = await httpsGetJson(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=${that.apikey}&pagetoken=${pagetoken}`);
+            let dataChunk = await httpsGetJson(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=${self.apikey}&pagetoken=${pagetoken}`);
             await collectData(dataChunk);
         }
     }
