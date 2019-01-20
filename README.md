@@ -10,9 +10,9 @@ Install from npm:
 
     $ npm install google-maps-place-crawler
 
-Require the package. Here we will store it in the variable GoogleMapsPlaceCrawler. Do not use const because the object is manipulated by the script.
+Require the package. Here we will store it in the variable GoogleMapsPlaceCrawler.
 
-    let GoogleMapsPlaceCrawler = require('google-maps-place-crawler')
+    const GoogleMapsPlaceCrawler = require('google-maps-place-crawler')
 
 Set your Google Maps API key in the same object:
 
