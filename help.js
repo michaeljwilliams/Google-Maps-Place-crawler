@@ -7,8 +7,8 @@ console.log(`
 +--------------------------------------+`);
 
 // DIRECTIONS
-// Require the module. Do not set as const because it posesses the data container, which is manipulated.
-let GoogleMapsPlaceCrawler = require('./index');
+// Require the module.
+const GoogleMapsPlaceCrawler = require('./index');
 
 // Set your Google Maps API key. 
 // GoogleMapsPlaceCrawler.apikey = 'YOUR_API_KEY';
